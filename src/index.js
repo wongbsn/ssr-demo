@@ -1,27 +1,22 @@
-import express from 'express';
+const express = require("express");
+const serverless = require("serverless-http");
 
-let app = require('./server').default;
+let server = require("./server").default;
 
 if (module.hot) {
-  module.hot.accept('./server', function() {
-    console.log('🔁  HMR Reloading `./server`...');
+  module.hot.accept("./server", function () {
+    console.log("🔁  HMR Reloading `./server`...");
     try {
-      app = require('./server').default;
+      server = require("./server").default;
     } catch (error) {
       console.error(error);
     }
   });
-  console.info('✅  Server-side HMR Enabled!');
+  console.info("✅  Server-side HMR Enabled!");
 }
 
 const port = process.env.PORT || 3000;
 
-export default express()
-  .use((req, res) => app.handle(req, res))
-  .listen(port, function(err) {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log(`> Started on port ${port}`);
-  });
+const app = express().use((req, res) => server.handle(req, res));
+
+exports.handler = serverless(app);

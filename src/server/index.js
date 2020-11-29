@@ -1,6 +1,7 @@
 import React from "react";
-import { renderToString } from 'react-dom/server';
+import { renderToString } from "react-dom/server";
 import express from "express";
+import bodyParser from "body-parser";
 import { render } from "@jaredpalmer/after";
 import { getDataFromTree } from "@apollo/client/react/ssr";
 import Document from "./Document";
@@ -11,10 +12,16 @@ const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 const chunks = require(process.env.RAZZLE_CHUNKS_MANIFEST);
 
 const server = express();
+
+const lambdaRoute = "/.netlify/functions/server";
+
 server
   .disable("x-powered-by")
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
+  .use(bodyParser.json())
   .get("/*", async (req, res) => {
+    const url = req.url.replace(new RegExp(`^${lambdaRoute}`), "") || "/";
+
     try {
       const customRenderer = (node) => {
         const { Provider, client } = createProvider({ ssrMode: true });
@@ -28,7 +35,10 @@ server
       };
 
       const html = await render({
-        req,
+        req: {
+          ...req,
+          url,
+        },
         res,
         routes,
         assets,

@@ -8,7 +8,7 @@ import {
 import fetch from "isomorphic-fetch";
 
 const createProvider = ({ ssrMode = false } = {}) => {
-  const cache = new InMemoryCache();
+  const cache = new InMemoryCache({ addTypename: false });
 
   if (!ssrMode) {
     cache.restore(window.__APOLLO_STATE__);

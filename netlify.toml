@@ -1,0 +1,14 @@
+[build]
+  command = "yarn install && yarn run build"
+  publish = "build/public"
+  functions = "build"
+
+[[redirects]]
+  from = "/static/*"
+  to = "/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/server"
+  status = 200
