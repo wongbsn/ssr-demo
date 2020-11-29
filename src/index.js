@@ -15,8 +15,19 @@ if (module.hot) {
   console.info("✅  Server-side HMR Enabled!");
 }
 
-const port = process.env.PORT || 3000;
 
 const app = express().use((req, res) => server.handle(req, res));
+
+if (process.env.NODE_ENV !== "production") {
+  const port = process.env.PORT || 3000;
+
+  app.listen(port, function (err) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(`> Started on port ${port}`);
+  });
+}
 
 exports.handler = serverless(app);

@@ -1,9 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 
 const GET_COUNTRIES = gql`
   query getCountries {
     countries {
+      code
       name
     }
   }
@@ -20,16 +22,25 @@ const Home = () => {
     return (
       <>
         <h1>Error</h1>
-        <p>{error}</p>
+        <pre>{JSON.stringify(error, null, 2)}</pre>
       </>
     );
   }
 
   return (
-    <>
+    <main>
       <h1>Countries:</h1>
-      <pre>{JSON.stringify(data.countries, null, 2)}</pre>
-    </>
+      {data.countries.map(({ code, name }) => {
+        const url = `/country/${code}`;
+
+        return (
+          <div key={code}>
+            <h2>{name}</h2>
+            <Link to={url}>See more info </Link>
+          </div>
+        );
+      })}
+    </main>
   );
 };
 

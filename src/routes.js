@@ -10,5 +10,13 @@ export default [
       loader: () => import('./Home'),
       Placeholder: () => <div>...LOADING...</div>,
     }),
+  },
+  {
+    path: '/country/:code',
+    exact: true,
+    component: asyncComponent({
+      loader: () => import('./Country'),
+      Placeholder: () => <div>...LOADING...</div>,
+    }),
   }
 ];

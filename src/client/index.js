@@ -9,7 +9,7 @@ const { Provider } = createProvider();
 
 ensureReady(routes).then((data) =>
   hydrate(
-    <BrowserRouter basename="/.netlify/functions/server">
+    <BrowserRouter>
       <Provider>
         <After data={data} routes={routes} />
       </Provider>
